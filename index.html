@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+<title>异世界铁匠铺 Ver 0.131 (存档版)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body onclick="initAudio()">
+    <div id="game-container">
+        <!-- 顶部信息栏 -->
+        <header>
+            <div class="info">💰 金币: <span id="gold" style="color:#f1c40f;">1500</span></div>
+            <div class="info">🏅 声望: <span id="reputation" style="color:#3498db;">0</span></div>
+            <div class="info tooltip-container" style="color:#2ecc71;">🏰 城镇Lv: <span id="town-level">1</span>
+                <div class="tooltip-box">受销量、任务、NPC战力与时间影响(约2周升1级)。<br>等级提升可解锁更高级的市场材料与新冒险者入住！</div>
+            </div>
+            
+            <!-- 新增：存读档操作面板 -->
+            <div class="time-panel">
+                <button onclick="saveGame()" class="btn-time" style="background:#27ae60; color:white;">💾 保存</button>
+                <button onclick="loadGame()" class="btn-time" style="background:#2980b9; color:white;">📂 读取</button>
+                <button onclick="resetGame()" class="btn-time" style="background:#c0392b; color:white;">🗑️ 重置</button>
+            </div>
+
+            <div class="time-panel">
+                <button id="btn-sound-toggle" onclick="toggleSound()" class="btn-time" style="background:#34495e; color:white;">🔊 音效</button>
+                <button id="btn-time-toggle" onclick="toggleTime()" class="btn-time paused">⏸️ 时间静止</button>
+                <div class="time-display">📅 第<span id="week">1</span>周 <span id="day">1</span>天 <span id="hour">8</span>:00</div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- 左侧：市场与学徒 -->
+            <div class="panel left-panel">
+                <div class="panel-tabs">
+                    <button class="ptab-btn active" onclick="switchPanelTab('left', 'player', this)">🧑 主角</button>
+                    <button class="ptab-btn" onclick="switchPanelTab('left', 'market', this)">🛒 市场</button>
+                    <button class="ptab-btn" onclick="switchPanelTab('left', 'apprentice', this)">👥 学徒</button>
+                </div>
+                <div id="left-player" class="ptab-content active-ptab">
+                    <h2 style="color:#f4d03f; margin-bottom:5px;">铁匠：主角</h2>
+                    <p style="margin-top:0;">👑 职级：<span style="color:#3498db; font-weight:bold;">见习铁匠</span></p>
+                    <div class="divider"></div>
+                    <h3>🔪 锻造熟练度</h3>
+                    <div id="player-skills-detail"></div>
+                </div>
+                <div id="left-market" class="ptab-content">
+                    <p class="hint" style="color:#e74c3c;">每周结算: 房租 500G，学徒工资 150G/人。</p>
+                    <div id="market-list" class="market-grid"></div>
+                    <div class="divider"></div>
+                    <h3>📦 原料库存</h3>
+                    <div id="inventory-raw-list"></div>
+                </div>
+                <div id="left-apprentice" class="ptab-content">
+                    <button id="btn-hire" onclick="hireApprentice()" style="width:100%; margin-bottom:10px; background:#2980b9;">招募新学徒 (1000G)</button>
+                    <div id="apprentice-list"></div>
+                </div>
+            </div>
+
+            <!-- 中间：工作台 -->
+            <div class="panel mid-panel">
+                <div class="panel-tabs">
+                    <button class="ptab-btn active" onclick="switchPanelTab('mid', 'workbench', this)">🔨 工作台</button>
+                    <button class="ptab-btn" onclick="switchPanelTab('mid', 'blueprint', this)">📜 图纸</button>
+                </div>
+                <div id="mid-workbench" class="ptab-content active-ptab">
+                    <div class="work-status">
+                        <div id="work-text">当前状态: 空闲中</div>
+                        <div class="progress-bg"><div id="progress-bar" class="progress-fill"></div></div>
+                    </div>
+                    <div class="action-group" id="process-buttons" style="display:flex; flex-wrap:wrap; gap:5px;"></div>
+                    
+                    <div class="action-group blueprint-box">
+                        <select id="bp-selector" onchange="changeTargetBlueprint(this.value)"></select>
+                        <div style="display:flex; margin-top:10px;">
+                            <div id="workbench-slots" class="slots-container" style="flex:1;"></div>
+                            <div id="enchant-slot-container" style="border-left: 2px dashed #4a3f35; padding-left: 10px; margin-left: 10px;">
+                                <div id="enchant-slot" class="part-item empty" style="border-color:#9b59b6; color:#9b59b6; width:50px;">附魔槽</div>
+                            </div>
+                        </div>
+                        <button id="btn-assemble" onclick="startAssemblyProgress()" disabled style="background:#d35400; font-size:1.1em; padding:10px; font-weight:bold; margin-top:10px;">🛠️ 开始组装</button>
+                    </div>
+                    
+                    <h3 style="margin-top: 15px; margin-bottom:5px;">📦 零件库 (自动堆叠，右键出售)</h3>
+<div class="inv-grid-container">
+                        <div class="inv-col"><div class="inv-col-title">🪨 金属</div><div id="inv-ingot" class="parts-grid"></div></div>
+                        <div class="inv-col"><div class="inv-col-title">🪵 木材</div><div id="inv-handle" class="parts-grid"></div></div>
+                        <div class="inv-col"><div class="inv-col-title">📜 布料</div><div id="inv-fabric" class="parts-grid"></div></div>
+                        <div class="inv-col"><div class="inv-col-title">🦇 皮革</div><div id="inv-leather" class="parts-grid"></div></div>
+                        <div class="inv-col"><div class="inv-col-title">💎 宝石</div><div id="inv-enchant" class="parts-grid"></div></div>
+                    </div>
+                </div>
+                <div id="mid-blueprint" class="ptab-content">
+                    <div id="blueprint-store"></div>
+                </div>
+            </div>
+
+            <!-- 右侧：生态闭环 -->
+            <div class="panel right-panel">
+                <div class="panel-tabs">
+                    <button class="ptab-btn active" onclick="switchPanelTab('right', 'shop', this)">🏪 货架</button>
+                    <button class="ptab-btn" onclick="switchPanelTab('right', 'tavern', this)" style="color:#f1c40f;">🍻 酒馆(6大职业)</button>
+                    <button class="ptab-btn" onclick="switchPanelTab('right', 'dungeon', this)" style="color:#e74c3c;">🗺️ 地下城</button>
+                    <button class="ptab-btn" onclick="switchPanelTab('right', 'guild', this)">🛡️ 悬赏(带Lv)</button>
+                </div>
+                
+                <div id="right-shop" class="ptab-content active-ptab">
+                    <h3 style="color:#2ecc71;">🧺 日常百货区</h3>
+                    <div id="tool-shelf" class="parts-grid" style="margin-bottom: 20px;"></div>
+                    <div class="divider"></div>
+                    
+                    <h3 style="color:#e74c3c;">⚔️ 神器装备区</h3>
+                    <div id="shelf" class="shelf-grid" style="margin-bottom: 20px;"></div>
+                    
+                    <h3 style="color:#3498db;">🛒 冒险者收购栏</h3>
+                    <div id="acquisition-shelf" class="shelf-grid"></div>
+                </div>
+
+                <div id="right-tavern" class="ptab-content">
+                    <p class="hint">城镇每升1级，入驻2名新冒险者。他们破产没武器时也会去下本，但效率极低且易死。</p>
+                    <div id="adventurer-list" class="adv-grid"></div>
+                </div>
+
+                <div id="right-dungeon" class="ptab-content">
+                    <div id="active-expedition-status" style="background:#1a1c20; padding:10px; border-radius:6px; border:1px solid #3498db; text-align:center; color:#ccc; margin-bottom:15px;">暂无远征队伍。发布高额悬赏招募 2~4 名精英！</div>
+                    <div id="dungeon-view" class="dungeon-track"></div>
+                </div>
+
+                <div id="right-guild" class="ptab-content">
+                    <div id="guild-orders" class="orders-list"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="log-container">
+            <div class="log-tabs">
+                <button class="tab-btn active" onclick="switchTab('internal', this)">🔨 内部运作</button>
+                <button class="tab-btn" onclick="switchTab('external', this)">📜 世界与交易</button>
+            </div>
+            <div id="log-internal" class="log-box active-log"></div>
+            <div id="log-external" class="log-box"></div>
+        </div>
+
+        <div id="minigame-modal" class="modal-overlay">
+            <div class="modal-content">
+                <h2 style="text-align:center; color:#f4d03f;">✨ 鉴定神器中...</h2>
+                <div class="roulette-box">
+                    <div class="r-step" id="r-step-1">装备LV与战力: <span id="r-val-cp" class="roll-text">0</span></div>
+                    <div class="r-step" id="r-step-2">定向元素: <span id="r-val-element" class="roll-text">-</span></div>
+                    <div class="r-step" id="r-step-3">附加词条: <span id="r-val-affix" class="roll-text">-</span></div>
+                    <div class="r-step" id="r-step-4" style="font-size:1.5em; text-align:center;">品质: <br><strong id="r-val-final" class="roll-text">???</strong></div>
+                </div>
+                <button id="btn-close-modal" onclick="closeMinigame()" style="display:none; width:100%; margin-top:20px; font-size:1.2em; background:#27ae60;">摆上武器货架！</button>
+            </div>
+        </div>
+
+        <div id="event-modal" class="modal-overlay">
+            <div class="modal-content" style="border-color:#3498db; box-shadow: 0 0 50px rgba(52,152,219,0.5);">
+                <h2 id="event-title" style="text-align:center; color:#3498db;">事件标题</h2>
+                <div id="event-desc" style="font-size:1.1em; line-height:1.6; margin-bottom:20px;">事件描述</div>
+                <div id="event-rewards" style="background:#0a0b0d; padding:15px; border-radius:6px; color:#f1c40f; display:none; margin-bottom:20px;"></div>
+                <button onclick="closeEventModal()" style="width:100%; font-size:1.2em; background:#3498db;">确认</button>
+            </div>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
