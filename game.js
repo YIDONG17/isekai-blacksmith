@@ -64,19 +64,36 @@ const RAW_DB = {
 };
 
 const BP_DB = {
+    // 工具
     iron_pan: { id: 'iron_pan', category: 'tool', name: "平底锅", req: { ingot: 1 }, time: 1, basePrice: 25, cost: 0 },
     iron_hoe: { id: 'iron_hoe', category: 'tool', name: "农用铁锄", req: { ingot: 1, handle: 1 }, time: 1, basePrice: 35, cost: 0 },
     hunting_trap: { id: 'hunting_trap', category: 'tool', name: "捕兽夹", req: { ingot: 2 }, time: 1, basePrice: 50, cost: 10 },
     leather_bag: { id: 'leather_bag', category: 'tool', name: "冒险行囊", req: { leather: 2 }, time: 2, basePrice: 80, cost: 15 },
+    steel_axe: { id: 'steel_axe', category: 'tool', name: "伐木钢斧", req: { ingot: 2, handle: 1 }, time: 2, basePrice: 120, cost: 30 },
     
+    // 战士/骑士
     basic_sword: { id: 'basic_sword', category: 'weapon', lv: 1, name: "制式单手剑", req: { ingot: 4, handle: 2 }, time: 8, stats: {atk: 10, def: 0, spd: -2}, cost: 30, classes:['战士', '骑士'] },
     greatsword: { id: 'greatsword', category: 'weapon', lv: 5, name: "重型大剑", req: { ingot: 8, handle: 3 }, time: 16, stats: {atk: 25, def: 0, spd: -8}, cost: 80, classes:['战士'] },
+    silver_rapier: { id: 'silver_rapier', category: 'weapon', lv: 10, name: "秘银细剑", req: { ingot: 5, handle: 1, leather: 1 }, time: 20, stats: {atk: 40, def: 0, spd: 15}, cost: 150, classes: ['战士', '骑士'] },
+    heavy_shield: { id: 'heavy_shield', category: 'armor', lv: 1, name: "步兵方盾", req: { ingot: 6, handle: 2 }, time: 18, stats: {atk: 0, def: 35, spd: -10}, cost: 100, classes:['骑士'] },
+    mithril_shield: { id: 'mithril_shield', category: 'armor', lv: 10, name: "秘银重盾", req: { ingot: 8, leather: 2 }, time: 24, stats: {atk: 0, def: 55, spd: -10}, cost: 150, classes:['骑士'] },
+    dragon_armor: { id: 'dragon_armor', category: 'armor', lv: 15, name: "战神板甲", req: { ingot: 10, leather: 5 }, time: 30, stats: {atk: 0, def: 60, spd: -15}, cost: 200, classes:['战士', '骑士'] },
+
+    // 盗贼/游侠
+    dagger: { id: 'dagger', category: 'weapon', lv: 1, name: "暗杀匕首", req: { ingot: 2, handle: 1 }, time: 8, stats: {atk: 8, def: 0, spd: 15}, cost: 30, classes:['盗贼'] },
     rapier: { id: 'rapier', category: 'weapon', lv: 4, name: "刺客细剑", req: { ingot: 3, handle: 1, leather: 1 }, time: 10, stats: {atk: 12, def: 0, spd: 15}, cost: 60, classes:['盗贼', '游侠'] },
-    staff: { id: 'staff', category: 'weapon', lv: 1, name: "法师长杖", req: { handle: 4, fabric: 2 }, time: 12, stats: {atk: 5, def: 0, spd: 5}, cost: 50, classes:['法师', '牧师'] },
-    
+    shadow_blade: { id: 'shadow_blade', category: 'weapon', lv: 10, name: "幻影毒刃", req: { ingot: 3, handle: 1, leather: 1 }, time: 16, stats: {atk: 22, def: 0, spd: 25}, cost: 120, classes:['盗贼'] },
+    hunting_bow: { id: 'hunting_bow', category: 'weapon', lv: 1, name: "猎人短弓", req: { handle: 3, fabric: 1 }, time: 10, stats: {atk: 12, def: 0, spd: 5}, cost: 40, classes:['游侠'] },
+    longbow: { id: 'longbow', category: 'weapon', lv: 5, name: "精灵长弓", req: { handle: 5, fabric: 2 }, time: 16, stats: {atk: 28, def: 0, spd: 2}, cost: 90, classes:['游侠'] },
     light_armor: { id: 'light_armor', category: 'armor', lv: 1, name: "轻型皮甲", req: { leather: 5, ingot: 1 }, time: 14, stats: {atk: 0, def: 15, spd: 5}, cost: 60, classes:['盗贼', '游侠'] },
-    robe: { id: 'robe', category: 'armor', lv: 2, name: "法师长袍", req: { fabric: 6 }, time: 12, stats: {atk: 0, def: 10, spd: 2}, cost: 50, classes:['法师', '牧师'] },
-    heavy_shield: { id: 'heavy_shield', category: 'armor', lv: 1, name: "骑士塔盾", req: { ingot: 6, handle: 2 }, time: 18, stats: {atk: 0, def: 35, spd: -10}, cost: 100, classes:['骑士'] }
+
+    // 法师/牧师
+    staff: { id: 'staff', category: 'weapon', lv: 1, name: "法师长杖", req: { handle: 4, fabric: 2 }, time: 12, stats: {atk: 5, def: 0, spd: 5}, cost: 50, classes:['法师', '牧师'] },
+    apprentice_staff: { id: 'apprentice_staff', category: 'weapon', lv: 1, name: "学徒法杖", req: { handle: 4, fabric: 2 }, time: 14, stats: {atk: 5, def: 0, spd: 5}, cost: 40, classes:['法师', '牧师'] },
+    magic_tome: { id: 'magic_tome', category: 'weapon', lv: 5, name: "秘法魔典", req: { leather: 3, fabric: 3 }, time: 18, stats: {atk: 20, def: 5, spd: 0}, cost: 100, classes:['法师'] },
+    holy_book: { id: 'holy_book', category: 'weapon', lv: 5, name: "神圣教典", req: { leather: 2, fabric: 4 }, time: 16, stats: {atk: 10, def: 15, spd: 0}, cost: 90, classes:['牧师'] },
+    divine_staff: { id: 'divine_staff', category: 'weapon', lv: 10, name: "祈祷权杖", req: { handle: 4, ingot: 2 }, time: 22, stats: {atk: 15, def: 25, spd: 5}, cost: 160, classes:['牧师'] },
+    robe: { id: 'robe', category: 'armor', lv: 2, name: "法师长袍", req: { fabric: 6 }, time: 12, stats: {atk: 0, def: 10, spd: 2}, cost: 50, classes:['法师', '牧师'] }
 };
 
 const P_NAMES = { ingot: '金属锭', handle: '木柄', fabric: '布料', leather: '熟皮', enchant: '灵能宝石' };
@@ -110,7 +127,7 @@ let gameState = {
     gold: 1500, reputation: 0, time: { week: 1, day: 1, hour: 8 }, luck: 1.0, soundEnabled: true,
     town: { level: 1, toolsSold: 0, bounties: 0, daysPassed: 0 },
     inventory: { raw: {}, parts:[] }, market: [], adventurers:[], toolShelf: {}, shelf:[null, null, null, null], acquisitionSlots: [null, null], guildOrders: [],
-    unlockedBPs:['iron_pan', 'iron_hoe', 'basic_sword', 'staff'], 
+    unlockedBPs:['iron_pan', 'iron_hoe', 'basic_sword', 'apprentice_staff', 'dagger', 'hunting_bow'],
     workbench: { targetBP: 'iron_pan', partsHeld:[], enchantHeld: null },
     expedition: { active: false, status: null, targetId: null, sponsorGold: 0, members:[], reqMembers: 2, timer: 0 }, 
     isPaused: true, autoPauseOnTaskEnd: false, selectingOrderIndex: null,
@@ -279,8 +296,12 @@ function finishWork() {
             log(`🔨 制作完成:[${Q_NAMES[qual-1]}] ${bp.name}`, 'internal');
         } else {
             let avgQ = partsUsed.length > 0 ? partsUsed.reduce((s, p) => s + p.quality, 0) / partsUsed.length : 1;
-            let avgLv = partsUsed.length > 0 ? Math.floor(partsUsed.reduce((s, p) => s + (p.lv||1), 0) / partsUsed.length) : 1;
-            startPlayerAssemblyMinigame(bpId, avgQ, avgLv, encUsed); return; 
+            // 修复：材料平均等级，但保底绝不低于图纸自带的基础等级
+            let matLv = partsUsed.length > 0 ? Math.floor(partsUsed.reduce((s, p) => s + (p.lv || 1), 0) / partsUsed.length) : 1;
+            let finalLv = Math.max(bp.lv || 1, matLv);
+            
+            startPlayerAssemblyMinigame(bpId, avgQ, finalLv, encUsed); 
+            return; 
         }
     } else {
         let qual = rollQuality(gameState.player.skills[task].lv); gameState.partCounter++;
@@ -477,8 +498,11 @@ function processApprentices() {
                         let qual = rollQuality(app.skills.assemble.lv); let key = bpId + '|' + qual;
                         gameState.toolShelf[key] = (gameState.toolShelf[key] || 0) + 1;
                     } else {
-                        let avgLv = app.heldParts.length > 0 ? Math.floor(app.heldParts.reduce((s, p) => s + (p.lv || 1), 0) / app.heldParts.length) : 1;
-                        let weapon = generateEquipmentStats(bpId, avgQ, avgLv, app.skills.assemble.lv, null);
+                        // 修复：学徒制作装备同样受图纸保底等级保护
+                        let matLv = app.heldParts.length > 0 ? Math.floor(app.heldParts.reduce((s, p) => s + (p.lv || 1), 0) / app.heldParts.length) : 1;
+                        let finalLv = Math.max(bp.lv || 1, matLv);
+                        
+                        let weapon = generateEquipmentStats(bpId, avgQ, finalLv, app.skills.assemble.lv, null);
                         let emptyIdx = gameState.shelf.findIndex(s => s === null);
                         if (emptyIdx !== -1) gameState.shelf[emptyIdx] = weapon;
                     }
